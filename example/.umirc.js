@@ -18,7 +18,7 @@ export default {
                 ],
             },
         ],
-        // 在其他引入，需安装 umi-plugin-dir-model 并使用以下写法：
+        // 在其他项目引入，需安装 umi-plugin-dir-model 并使用以下写法：
         // [
         //     'umi-plugin-dir-model',
         //     {

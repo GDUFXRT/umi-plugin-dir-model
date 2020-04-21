@@ -6,7 +6,7 @@
         "name": "xuruitao",
         "email": "919950909@qq.com"
     },
-    "repository": "/umi-plugin-dir-model",
+    "repository": "https://github.com/GDUFXRT/umi-plugin-dir-model",
     "peerDependencies": {
         "umi": "2.x || ^2.9.0-0"
     },
@@ -27,6 +27,11 @@
         "lib",
         "src",
         "ui"
+    ],
+    "keywords": [
+        "umi dva model",
+        "global model",
+        "directory model"
     ],
     "license": "MIT",
     "dependencies": {
