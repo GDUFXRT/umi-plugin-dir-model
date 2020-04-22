@@ -10,7 +10,7 @@ export default {
             },
         ],
         [
-            join(__dirname, '..', require('../package').main || 'index.js'),
+            'umi-plugin-dir-model',
             {
                 cwd: [
                     join(__dirname, 'customModel1'),
@@ -18,9 +18,9 @@ export default {
                 ],
             },
         ],
-        // 在其他项目引入，需安装 umi-plugin-dir-model 并使用以下写法：
+        // 本地引入
         // [
-        //     'umi-plugin-dir-model',
+        //     join(__dirname, '..', require('../package').main || 'index.js'),
         //     {
         //         cwd: [
         //             join(__dirname, 'customModel1'),
