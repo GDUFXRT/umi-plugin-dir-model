@@ -9,11 +9,15 @@ import { winPath } from 'umi-utils';
  */
 function getModelTmp(modelPaths) {
     let addModelTmp = ';';
-    modelPaths.forEach((itemPath) => {
+    modelPaths.forEach(itemPath => {
         addModelTmp += `window.g_app.model({...require('${itemPath}').default});`;
     });
 
-    return addModelTmp;
+    return `
+    export function inject() {
+        ${addModelTmp}
+    }
+  `;
 }
 
 /**
@@ -23,23 +27,37 @@ function getModelTmp(modelPaths) {
  */
 function getModel(cwd) {
     return globby
-        .sync(`(model.js|*/model.js|*/models/**/*.js)`, {
+        .sync(`{**/model.js,**/models/**/*.{ts,tsx,js,jsx}}`, {
             cwd,
         })
-        .filter((p) => !p.endsWith('.test.js'))
-        .map((p) => winPath(join(cwd, p)));
+        .filter(
+            p =>
+                !p.endsWith('.d.ts') &&
+                !p.endsWith('.test.js') &&
+                !p.endsWith('.test.jsx') &&
+                !p.endsWith('.test.ts') &&
+                !p.endsWith('.test.tsx'),
+        )
+        .map(p => winPath(join(cwd, p)));
 }
 
 export default (api, opts) => {
     const { cwd } = opts;
-    let allModelsPath =
-        Object.prototype.toString.call(cwd) === '[object Array]'
-            ? cwd.reduce(
-                  (prevPaths, path) => prevPaths.concat(getModel(path)),
-                  [],
-              )
-            : getModel(cwd);
+    const modelPath = join(__dirname, '..', cwd);
+
+    const newFileName = 'injectAppendModel.js';
+    let allModelsPath = getModel(modelPath);
 
     // 存在 model，则将添加全局 model 代码写入入口文件(pages/.umi/umi.js)
-    allModelsPath.length && api.addEntryCode(getModelTmp(allModelsPath));
+    if (allModelsPath.length) {
+        api.writeTmpFile(newFileName, getModelTmp(allModelsPath));
+        api.addEntryCode(`
+        require('./${newFileName}').inject()
+        // hot module replacement
+        if (__IS_BROWSER && module.hot) {
+          module.hot.accept('./${newFileName}', () => {
+            clientRender();
+        });
+        }`);
+    }
 };
