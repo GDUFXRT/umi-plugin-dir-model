@@ -43,7 +43,7 @@ function getModel(cwd) {
 
 export default (api, opts) => {
     const { cwd } = opts;
-    const modelPath = join(__dirname, '..', cwd);
+    const modelPath = cwd;
 
     const newFileName = 'injectAppendModel.js';
     let allModelsPath = getModel(modelPath);
