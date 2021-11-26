@@ -1,6 +1,6 @@
 {
     "name": "umi-plugin-dir-model",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "generate directory models",
     "authors": {
         "name": "xuruitao",
